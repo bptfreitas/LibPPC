@@ -1,27 +1,25 @@
 CFLAGS = 
 ALL_CFLAGS = -O0 -g $(CFLAGS)
 
-LDFLAGS = 
+LDFLAGS = -static ../lib/static/libppc.a
 ALL_LDFLAGS = $(LDFLAGS)
 
 CC=gcc
 LD=gcc
 
 # passar como parametro do Makefile o nome do codigo fonte
-HEADERS = include/libppc.h
-SRC = src/libpcc.c matrixmult.c
+SRC = matrixmult.c
 OBJ = $(SRC:.c=.o)
 
 .PHONY: all clean
 
-%.o: %.c $(HEADERS)
-	$(CC) -I. -Iinclude $(ALL_CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) -I. -I../include $(ALL_CFLAGS) -c $< -o $@
 
 all: $(OBJ)
-	gcc $(LDFLAGS) $? -o matrixmult
-
+	$(LD) $? -o matrixmult $(LDFLAGS) 
 
 clean:
-	rm -f *.o src/*.o matrixmult 
+	rm -f *.o matrixmult 
 
 
