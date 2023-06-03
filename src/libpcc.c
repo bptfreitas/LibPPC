@@ -35,13 +35,15 @@ int save_double_vector(const double *data, long int size, const char *filename )
 	
 	fd = fopen( filename , "wb" );
 
-	int nbytes = fwrite( data , sizeof(double), size , fd );
+	long int nbytes = fwrite( data , sizeof(double), size , fd );
 
 	if ( nbytes != size ) {
 
 		fclose( fd );
 
-		perror("Error: ");
+		fprintf(stderr, "Error: saved size (%ld) is not the requested size (%ld)",
+			nbytes,
+			size );
 
 		return nbytes;
 
@@ -54,11 +56,13 @@ int save_double_vector(const double *data, long int size, const char *filename )
 }
 
 
-int load_double_vector(double *data, long int size, const char *filename ){
+double* load_double_vector(const char *filename, long int size){
 
 	FILE *fd = NULL;
+
+	double *data = (double*)malloc(sizeof(double)*size);
 	
-	fd = fopen( filename , "r" );
+	fd = fopen( filename , "rb" );
 
 	int nbytes = fread( data , sizeof(double), size, fd );
 
@@ -66,36 +70,38 @@ int load_double_vector(double *data, long int size, const char *filename ){
 
 		fclose( fd );
 		
-		return 0;
+		return data;
 
 	} else {
 
-		perror("Error: ");
+		fprintf(stderr, "Error: requested vector size (%ld) is not the size read (%d)",
+			size,
+			nbytes);
+
+		free(data);
 
 		fclose( fd );
 
-		return -1;
+		return NULL;
 
 	}
 }
 
-
-void generate_random_double_vector(double *pointer_to_data, 
-	long int size, 
-	double minvalue, 
-	double maxvalue)
+double* generate_random_double_vector(long int size)
 {
 	srand( time(NULL) );
 
-	double step_range = ( ( maxvalue - minvalue ) / ( (double) RAND_MAX ) );
+	double *vector = (double*)malloc( sizeof(double)*size );
 
 	for ( unsigned long i = 0; i< size; i++){
 		
-		double num = ( ( (double) rand() ) * step_range ) - minvalue;
+		double num =  (double) ( rand() % size ) ;
 
-		pointer_to_data[ i ] = num;
+		vector[ i ] = num;
 
 	}
+
+	return vector;
 
 }
 
@@ -126,6 +132,7 @@ int compare_double_vector_files(const char *vector_file1,
 	vector1_fp = fopen(vector_file1, "r");
 	vector2_fp = fopen(vector_file2, "r");
 
+	// Buffers are 512 bytes to avoid memory overflow
 	double *file1_buffer = (double*)malloc(  sizeof(double) * 512 );
 
 	double *file2_buffer = (double*)malloc(  sizeof(double) * 512 );
