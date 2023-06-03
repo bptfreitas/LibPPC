@@ -9,25 +9,44 @@ LD=gcc
 
 # passar como parametro do Makefile o nome do codigo fonte
 HEADERS = include/libppc.h
-SRC = src/libpcc.c
+SRC = libpcc.c
 OBJ = $(SRC:.c=.o)
 
-.PHONY: all clean static shared
+.PHONY: all clean clean-obj static shared prepare
 
-VPATH = obj/static obj/shared src
+VPATH = src
 
 %.o: %.c $(HEADERS)
 	$(CC) -I. -Iinclude $(ALL_CFLAGS) -c $< -o $@
 
-all: static shared
+prepare:
+	mkdir -p obj/shared
+	mkdir -p obj/static
+	mkdir -p lib/shared
+	mkdir -p lib/static
 
-static: obj/static/libppc.o
-	$(AR) cru $< lib/static/libppc.a
+all:
+	make prepare
+	make CFLAGS="" static
+	make clean-obj
+	make CFLAGS="-fPIC" shared
 
-shared: obj/shared/libppc.o
-	$(LD) $(ALL_LDFLAGS) $< lib/shared/libppc.so
+static: $(OBJ)
+	$(AR) cru lib/static/libppc.a $<
 
-clean:
-	rm -f *.o src/static/*.o src/shared/*.o
+shared: $(OBJ)
+	$(LD) -shared $(ALL_LDFLAGS) $< -o lib/shared/libppc.so
+
+clean-obj:
+	rm -rf *.o
+
+clean-shared:
+	rm -rf lib/shared/*
+
+clean-static:
+	rm -rf lib/static/*
+
+clean: clean-obj clean-static clean-shared
+
 
 
