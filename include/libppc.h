@@ -65,7 +65,7 @@ int save_double_vector(const double *data, long int size, const char *filename )
 
 	\return 0 on success
 */ 
-int load_double_vector(double *data, long int size, const char *filename );
+double* load_double_vector(const char *filename, long int size);
 
 /**
 	\brief Fills a double vetor with random numbers
@@ -75,7 +75,7 @@ int load_double_vector(double *data, long int size, const char *filename );
 	\param minvalue the lowest number to generate
 	\param maxvalue the highest value to generate
 */
-void generate_random_double_vector(double *pointer_to_data, long int quantity, double minvalue, double maxvalue);
+double* generate_random_double_vector(long int quantity, double minvalue, double maxvalue);
 
 /**
 	\brief Compares 2 vectors stored on main memory

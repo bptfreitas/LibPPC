@@ -87,19 +87,21 @@ double* load_double_vector(const char *filename, long int size){
 	}
 }
 
-double* generate_random_double_vector(long int size)
+double* generate_random_double_vector(long int quantity, double minvalue, double maxvalue)
 {
 	srand( time(NULL) );
 
-	double *vector = (double*)malloc( sizeof(double)*size );
-
-	for ( unsigned long i = 0; i< size; i++){
+	double *vector = (double*)malloc( sizeof(double)*quantity );
 		
-		double num =  (double) ( rand() % size ) ;
+	double step_range = ( ( maxvalue - minvalue ) / ( (double) RAND_MAX ) );
+
+	for ( unsigned long i = 0; i< quantity; i++){
+		
+		double num = ( ( (double) rand() ) * step_range ) - minvalue;
 
 		vector[ i ] = num;
 
-	}
+	}	
 
 	return vector;
 
