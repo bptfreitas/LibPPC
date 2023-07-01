@@ -47,6 +47,17 @@ void print_double_vector(const double *data, long int size, long int line_break)
 void print_double_complex_vector(const double complex *data, long int size, long int line_break);
 
 
+
+/**
+	\brief Print an integer vector pointed by data
+
+	\param @data pointer to the data
+	\param @size size of the vector
+	\param @line_break breaks line after printing the specified number of here 
+*/ 
+void print_int_vector(const int *data, long int size, long int line_break);
+
+
 /**
 	\brief Saves a double vector pointed by data on a specified filename
 
@@ -77,6 +88,20 @@ int save_double_complex_vector(const double complex *data, long int size, const 
 
 
 /**
+	\brief Saves an integer vector pointed by data on a specified filename
+
+	The data is saved as an integer type - not as chars
+
+	\param @data pointer to the data
+	\param @size size of the vector
+	\param @filename name of the file to save the vector
+
+	\return 0 on success
+*/ 
+int save_int_vector(const int *data, long int size, const char *filename );
+
+
+/**
 	\brief Loads a file containing a double vector
 	
 
@@ -91,6 +116,22 @@ int save_double_complex_vector(const double complex *data, long int size, const 
 double* load_double_vector(const char *filename, long int size);
 
 /**
+	\brief Loads a file containing an integer vector
+	
+	Example: 
+	double * vector = load_double_vector( "file_with_doubles.dat", N );
+
+	\param filename name of the file to load the vector
+	\param size size of the vector
+
+	\return a pointer on success, NULL pointer on failure
+*/ 
+int* load_int_vector(const char *filename, long int size);
+
+
+
+
+/**
 	\brief Fills a double vetor with random numbers
 
 	\param pointer_to_data Pointer to the vector with data
@@ -100,12 +141,35 @@ double* load_double_vector(const char *filename, long int size);
 */
 double* generate_random_double_vector(long int quantity, double minvalue, double maxvalue);
 
+
+/**
+	\brief Fills a double vetor with random numbers
+
+	\param pointer_to_data Pointer to the vector with data
+	\param quantity the quantity of data to generate
+	\param minvalue the lowest number that can be generated
+	\param maxvalue the highest number that can be generated
+*/
+int* generate_random_int_vector(long int quantity, int minvalue, int maxvalue);
+
+
+
 /**
 	\brief Compares 2 vectors stored on main memory
 
 	\return 0 if the vectors are the same, 1 otherwise
 */
 int compare_double_vectors(const double *vector1, const double *vector2, long int size);
+
+
+
+/**
+ * \brief Compares two vectors stored on files
+ * 
+ * \return 1 if the vectors are the same, 0 otherwise
+*/
+int compare_int_vectors_on_files(const char *vector_file1, const char *vector_file2);
+
 
 
 /**

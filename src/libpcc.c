@@ -52,6 +52,26 @@ void print_double_complex_vector(const double complex *data, long int size, long
 }
 
 
+
+void print_int_vector(const int* data, long int size, long int line_break)
+{
+
+	long int i, j;
+
+	for ( i = 0; i < size; i++ ){
+	
+		fprintf(stderr,"\ndata[ %ld ] = %d", i, data[i] );
+
+		if ( i % line_break == 0 && i>0){
+			fprintf(stderr,"\n");
+		}
+		
+	}
+
+	fprintf(stdout,"\n");
+}
+
+
 int save_double_vector(const double *data, long int size, const char *filename ){
 
 	FILE *fd = NULL;
@@ -107,6 +127,34 @@ int save_double_complex_vector(const double complex *data, long int size, const 
 }
 
 
+int save_int_vector(const int *data, long int size, const char *filename ){
+
+	FILE *fd = NULL;
+	
+	fd = fopen( filename , "wb" );
+
+	long int nbytes = fwrite( data , sizeof(int), size , fd );
+
+	if ( nbytes != size ) {
+
+		fclose( fd );
+
+		fprintf(stderr, "Error: saved size (%ld) is not the requested size (%ld)",
+			nbytes,
+			size );
+
+		return nbytes;
+
+	} else {
+
+		fclose( fd );
+
+		return 0;
+
+	}
+}
+
+
 double* load_double_vector(const char *filename, long int size){
 
 	FILE *fd = NULL;
@@ -138,6 +186,41 @@ double* load_double_vector(const char *filename, long int size){
 	}
 }
 
+
+
+int* load_int_vector(const char *filename, long int size){
+
+	FILE *fd = NULL;
+
+	int *data = (int*)malloc(sizeof(int)*size);
+	
+	fd = fopen( filename , "rb" );
+
+	int nbytes = fread( data , sizeof(double), size, fd );
+
+	if ( nbytes == size ){
+
+		fclose( fd );
+		
+		return data;
+
+	} else {
+
+		fprintf(stderr, "Error: requested vector size (%ld) is not the size read from file (%d)",
+			size,
+			nbytes);
+
+		free(data);
+
+		fclose( fd );
+
+		return NULL;
+
+	}
+}
+
+
+
 double* generate_random_double_vector(long int quantity, double minvalue, double maxvalue)
 {
 	srand( time(NULL) );
@@ -158,6 +241,29 @@ double* generate_random_double_vector(long int quantity, double minvalue, double
 
 }
 
+
+int* generate_random_int_vector(long int quantity, int minvalue, int maxvalue)
+{
+	srand( time(NULL) );
+
+	int *vector = (int*)malloc( sizeof(int)*quantity );
+		
+	double step_range = ( ( maxvalue - minvalue ) / ( (double) RAND_MAX ) );
+
+	for ( unsigned long i = 0; i< quantity; i++){
+		
+		double num = ( ( (double) rand() ) * step_range ) - minvalue ;
+
+		vector[ i ] = (int)num;
+
+	}	
+
+	return vector;
+
+}
+
+
+
 int compare_double_vectors( 
 	const double *vector1,
 	const double *vector2,
@@ -175,6 +281,62 @@ int compare_double_vectors(
 
 	return 0;
 }
+
+
+int compare_int_vectors_on_files(const char *vector_file1, const char *vector_file2)
+{
+	FILE *vector1_fp, *vector2_fp;
+
+	vector1_fp = fopen(vector_file1, "r");
+	vector2_fp = fopen(vector_file2, "r");
+
+	// Buffers are 512 bytes to avoid memory overflow
+	int *file1_buffer = (int*)malloc(  sizeof(int) * 512 );
+
+	int *file2_buffer = (int*)malloc(  sizeof(int) * 512 );
+
+	size_t nbytes_read_file1, nbytes_read_file2;
+
+	// Default return is file are equal
+	int files_are_equal = 1;
+
+	while ( nbytes_read_file1 = fread( file1_buffer, sizeof(int) , 512 , vector1_fp ) ) {
+
+		nbytes_read_file2 = fread( file2_buffer, sizeof(int) , 512 , vector2_fp );
+
+		if ( nbytes_read_file1 != nbytes_read_file2 ){
+			// Files have different number of elements, return false
+			files_are_equal = 0;
+			break;
+		}
+
+		// Check if elements are the same
+		for ( long int i = 0; i < nbytes_read_file1 ; i ++ ){
+
+			if ( file1_buffer[ i ] != file2_buffer[ i ] ){
+
+				files_are_equal = 0;
+				break;
+
+			}
+
+		}
+
+		if (! files_are_equal ){
+			break;
+		}
+
+	}
+
+	free( file1_buffer );
+	free( file2_buffer );
+
+	fclose( vector1_fp );
+	fclose( vector2_fp );
+
+	return files_are_equal;	
+}
+
 
 
 int compare_double_vector_on_files(const char *vector_file1, const char *vector_file2)
