@@ -27,9 +27,9 @@ prepare:
 
 all:
 	make prepare
-	make CFLAGS="" static
+	make CFLAGS="$(CFLAGS)" static
 	make clean-obj
-	make CFLAGS="-fPIC" shared
+	make CFLAGS="$(CFLAGS) -fPIC" shared
 
 static: $(OBJ)
 	$(AR) cru lib/static/libppc.a $<
