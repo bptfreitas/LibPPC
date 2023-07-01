@@ -14,15 +14,38 @@
 
 #include <libppc.h>
 
-void print_vector(const double *data, long int size, long int line_break){
+void print_double_vector(const double *data, long int size, long int line_break){
+
 	long int i, j;
 
 	for ( i = 0; i < size; i++ ){
-		fprintf(stdout,"%.3f ",data[i]);
+		fprintf(stdout,"\ndata[ %ld ] = %.6f ", i, data[i]);
 
 		if ( i % line_break == 0 && i>0){
 			fprintf(stdout,"\n");
 		}
+	}
+
+	fprintf(stdout,"\n");
+}
+
+
+void print_double_complex_vector(const double complex *data, long int size, long int line_break)
+{
+
+	long int i, j;
+
+	for ( i = 0; i < size; i++ ){
+	
+		fprintf(stderr,"\ndata[ %ld ] = %.3f + %.3fi", 
+			i, 
+			creal(data[i]),
+			cimag(data[i]));
+
+		if ( i % line_break == 0 && i>0){
+			fprintf(stderr,"\n");
+		}
+		
 	}
 
 	fprintf(stdout,"\n");
@@ -52,6 +75,34 @@ int save_double_vector(const double *data, long int size, const char *filename )
 		fclose( fd );
 
 		return 0;
+	}
+}
+
+
+int save_double_complex_vector(const double complex *data, long int size, const char *filename ){
+
+	FILE *fd = NULL;
+	
+	fd = fopen( filename , "wb" );
+
+	long int nbytes = fwrite( data , sizeof(double complex), size , fd );
+
+	if ( nbytes != size ) {
+
+		fclose( fd );
+
+		fprintf(stderr, "Error: saved size (%ld) is not the requested size (%ld)",
+			nbytes,
+			size );
+
+		return nbytes;
+
+	} else {
+
+		fclose( fd );
+
+		return 0;
+
 	}
 }
 
@@ -126,8 +177,7 @@ int compare_double_vectors(
 }
 
 
-int compare_double_vector_files(const char *vector_file1, 
-	const char *vector_file2)
+int compare_double_vector_on_files(const char *vector_file1, const char *vector_file2)
 {
 	FILE *vector1_fp, *vector2_fp;
 
@@ -178,8 +228,62 @@ int compare_double_vector_files(const char *vector_file1,
 	fclose( vector1_fp );
 	fclose( vector2_fp );
 
-	return files_are_equal;
-	
+	return files_are_equal;	
+}
+
+
+int compare_double_complex_vector_on_files(const char *vector_file1, const char *vector_file2)
+{
+	FILE *vector1_fp, *vector2_fp;
+
+	vector1_fp = fopen(vector_file1, "r");
+	vector2_fp = fopen(vector_file2, "r");
+
+	// Buffers are 512 bytes to avoid memory overflow
+	double *file1_buffer = (double*)malloc(  sizeof(double complex) * 512 );
+
+	double *file2_buffer = (double*)malloc(  sizeof(double complex) * 512 );
+
+	size_t nbytes_read_file1, nbytes_read_file2;
+
+	// Default return is file are equal
+	int files_are_equal = 1;
+
+	while ( nbytes_read_file1 = fread( file1_buffer, sizeof(double) , 512 , vector1_fp ) ) {
+
+		nbytes_read_file2 = fread( file2_buffer, sizeof(double) , 512 , vector2_fp );
+
+		if ( nbytes_read_file1 != nbytes_read_file2 ){
+			// Files have different number of elements, return false
+			files_are_equal = 0;
+			break;
+		}
+
+		// Check if elements are the same
+		for ( long int i = 0; i < nbytes_read_file1 ; i ++ ){
+
+			if ( file1_buffer[ i ] != file2_buffer[ i ] ){
+
+				files_are_equal = 0;
+				break;
+
+			}
+
+		}
+
+		if (! files_are_equal ){
+			break;
+		}
+
+	}
+
+	free( file1_buffer );
+	free( file2_buffer );
+
+	fclose( vector1_fp );
+	fclose( vector2_fp );
+
+	return files_are_equal;	
 }
 
 

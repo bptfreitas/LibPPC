@@ -3,6 +3,7 @@
 #define __LIBPPC_H__
 
 
+#include <complex.h>
 
 /**
  *  * \brief This macro is intended to help on matrixes algorithms
@@ -35,6 +36,17 @@
 */ 
 void print_double_vector(const double *data, long int size, long int line_break);
 
+
+/**
+	\brief Print a double complex vector pointed by data
+
+	\param @data pointer to the data
+	\param @size size of the vector
+	\param @line_break breaks line after printing the specified number of here 
+*/ 
+void print_double_complex_vector(const double complex *data, long int size, long int line_break);
+
+
 /**
 	\brief Saves a double vector pointed by data on a specified filename
 
@@ -48,22 +60,33 @@ void print_double_vector(const double *data, long int size, long int line_break)
 */ 
 int save_double_vector(const double *data, long int size, const char *filename );
 
+
 /**
-	\brief Loads a file containing a double vector to 
+	\brief Saves a double complex vector pointed by data on a specified filename
 
-	The programmer must supply a double pointer variable address as a parameter.
+	The data is saved as a double type - not as chars
 
-	It is done like this to remind the programmer to alloc the memory before calling this function
-
-	Example: 
-	double *vector = (double*) malloc ( sizeof(double)*N );
-	load_double_vector( vector , N, "file_with_doubles.dat");
-
-	\param data pointer to the data
-	\param size size of the vector
-	\param filename name of the file to load the vector
+	\param @data pointer to the data
+	\param @size size of the vector
+	\param @filename name of the file to save the vector
 
 	\return 0 on success
+*/ 
+int save_double_complex_vector(const double complex *data, long int size, const char *filename );
+
+
+
+/**
+	\brief Loads a file containing a double vector
+	
+
+	Example: 
+	double * vector = load_double_vector( "file_with_doubles.dat", N );
+
+	\param filename name of the file to load the vector
+	\param size size of the vector
+
+	\return a pointer on success, NULL pointer on failure
 */ 
 double* load_double_vector(const char *filename, long int size);
 
@@ -88,12 +111,17 @@ int compare_double_vectors(const double *vector1, const double *vector2, long in
 /**
  * \brief Compares two vectors stored on files
  * 
- * \param 
- * \param 
+ * \return 1 if the vectors are the same, 0 otherwise
+*/
+int compare_double_vector_on_files(const char *vector_file1, const char *vector_file2);
+
+
+/**
+ * \brief Compares two double vectors stored on files
  * 
  * \return 1 if the vectors are the same, 0 otherwise
 */
-int compare_double_vector_files(const char *vector_file1, const char *vector_file2);
+int compare_double_complex_vector_on_files(const char *vector_file1, const char *vector_file2);
 
 
 /**
@@ -131,6 +159,7 @@ int save_double_matrix(const double *matrix,
 	long int number_of_lines, 
 	long int number_of_columns,
 	const char *filename );
+
 
 /**
  * \brief Loads a matrix saved on a file
