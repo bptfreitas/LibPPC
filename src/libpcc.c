@@ -619,10 +619,13 @@ int compare_double_matrixes_on_files(const char *matrix_file1,
 	long int lines_read = 0;
 
 	while ( n_elements_read1 = fread( file1_buffer, sizeof(double) , number_of_columns , matrix1_fp ) ) {
-
-		printf("\nn_elements_read1 = %ld", n_elements_read1 );
+	
+#ifdef __EXTRA_DEBUG_MESSAGES__	
+		fprintf(stderr, "\nn_elements_read1 = %ld", n_elements_read1 );
+#endif		
 
 		if ( n_elements_read1 < number_of_columns){
+				
 			printf("Error! Number of elements read from matrix1 line (%ld) is different from line size! (%ld)",
 				n_elements_read1,
 				number_of_columns);
@@ -632,7 +635,10 @@ int compare_double_matrixes_on_files(const char *matrix_file1,
 		}
 
 		n_elements_read2 = fread( file2_buffer, sizeof(double) , number_of_columns , matrix2_fp );
-		printf("\nn_elements_read2 = %ld", n_elements_read2 );
+		
+#ifdef __EXTRA_DEBUG_MESSAGES__		
+		fprintf(stderr, "\nn_elements_read2 = %ld", n_elements_read2 );
+#endif		
 
 		if ( n_elements_read2 < number_of_columns){
 			printf("Error! Number of elements read (%ld) from matrix2 line is different from line size! (%ld)",
