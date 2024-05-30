@@ -14,17 +14,15 @@
 #define TRUE 1
 #define FALSE 0
 
-#define DATA_T int
+/**
+	\brief A point in a 2-D space
+*/
+typedef struct {
 
-#if DATA_T == float
-	#define CONV_F atof
-	#define PRINTF "%0.1f"
-#elif DATA_T == int
-	#define CONV_F atoi
-	#define PRINTF "%d"
-#else
-	#error "Error - data type not set "
-#endif
+	double x;
+	double y;
+	
+} point2D_t;
 
 
 /**
@@ -152,6 +150,15 @@ double* generate_random_double_vector(long int quantity, double minvalue, double
 */
 int* generate_random_int_vector(long int quantity, int minvalue, int maxvalue);
 
+
+/**
+	\brief Generates a point vector on a 2-D space
+
+	\param quantity the quantity of data to generate
+	\param minvalue the lowest number that can be generated
+	\param maxvalue the highest number that can be generated
+*/
+point2D_t* generate_random_2Dpoints_vector(long int quantity, double minvalue, double maxvalue);
 
 
 /**

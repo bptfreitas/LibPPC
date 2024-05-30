@@ -264,6 +264,31 @@ int* generate_random_int_vector(long int quantity, int minvalue, int maxvalue)
 
 
 
+point2D_t* generate_random_2Dpoints_vector(long int quantity, double minvalue, double maxvalue)
+{
+	srand( time(NULL) );
+
+	point2D_t *vector = (point2D_t*)malloc( sizeof( point2D_t )*quantity );
+		
+	double step_range = ( ( maxvalue - minvalue ) / ( (double) RAND_MAX ) );
+
+	for ( long int i = 0; i< quantity; i++){
+		
+		double x = ( ( (double) rand() ) * step_range ) - minvalue ;
+		
+		double y = ( ( (double) rand() ) * step_range ) - minvalue ;
+
+		vector[ i ].x = x;
+		vector[ i ].y = y;
+
+	}	
+
+	return vector;
+
+}
+
+
+
 int compare_double_vectors( 
 	const double *vector1,
 	const double *vector2,
