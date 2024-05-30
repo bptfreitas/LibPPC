@@ -1,9 +1,9 @@
 
 CFLAGS = 
-ALL_CFLAGS = -O0 -g -I.. $(CFLAGS) 
+ALL_CFLAGS = -O0 -g -I../include $(CFLAGS) 
 
 LDFLAGS = 
-ALL_LDFLAGS = $(LDFLAGS) ../libppc.a
+ALL_LDFLAGS = $(LDFLAGS) ../lib/static/libppc.a
 CC=gcc
 
 # passar como parametro do Makefile o nome do codigo fonte
@@ -20,7 +20,7 @@ TESTS = $(ALL_TESTS_SRC:.c=)
 
 all: library $(TESTS)
 
-library: ../libppc.a ../libppc.so
+library:
 	make -C ../. all
 
 clean-outputs:
