@@ -31,7 +31,7 @@ int main(){
         return -12;
     }
 
-    int result = compare_double_vector_files( "file1.test1.input", "file2.test1.input" );
+    int result = compare_double_vector_on_files( "file1.test1.input", "file2.test1.input" );
     // Both files are equal, should return 1
     if ( result != 1 ){
         return 1;   
@@ -53,7 +53,7 @@ int main(){
         return -22;
     }
 
-    result = compare_double_vector_files( "file1.test2.input", "file2.test2.input" );
+    result = compare_double_vector_on_files( "file1.test2.input", "file2.test2.input" );
     // Files have different sizes, should return 0
     if ( result != 0 ){
         return 2;    
@@ -74,7 +74,7 @@ int main(){
         return -32;
     } 
 
-    result = compare_double_vector_files( "file1.test3.input", "file2.test3.input" );
+    result = compare_double_vector_on_files( "file1.test3.input", "file2.test3.input" );
     // Files have different sizes, should return 0
     if ( result != 0 ){
         return 3;    

@@ -10,9 +10,9 @@ int main(){
 
     save_double_vector( v1, 3, "teste01.dat" );
 
-    double *v2 = (double *)malloc( sizeof(double) * 3 );
+    double *v2;
 
-    load_double_vector( v2, 2, "teste01.dat" );
+    v2 = load_double_vector( "teste01.dat" , 2 );
 
     for ( int i = 0; i < 2 ; i ++ ){
 
