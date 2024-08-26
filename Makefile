@@ -26,7 +26,7 @@ all:
 static:
 	mkdir -p lib/static
 	make CFLAGS="$(CFLAGS)" $(OBJ)
-	$(AR) cru lib/static/libppc.a $<
+	$(AR) cru lib/static/libppc.a $(OBJ)
 
 shared:
 	mkdir -p lib/shared
